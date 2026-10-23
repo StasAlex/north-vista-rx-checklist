@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>GLOXORA Rx — Демо для менеджера</title>
+<style>
+body { margin: 0; }
+:root {
+  --bg: #fbf9fd; --surface: #ffffff; --fg: #2a1f45; --muted: #6a5f85; --line: #e6e0f3;
+  --accent: #6b4fbf; --accent-soft: #efeafb; --mist: #eee8fa;
+  --done: #2f8a5f; --partial: #b7791f; --open: #a59cbc; --warn-bg: #fdf3e2;
+  --font: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #15111f; --surface: #1d1729; --fg: #ece8f6; --muted: #a59cbc; --line: #2e2640;
+  --accent: #b39cf2; --accent-soft: #2a2140; --mist: #221b33;
+  --done: #5cc28f; --partial: #e0a84a; --open: #6d6385; --warn-bg: #2a2416;
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #15111f; --surface: #1d1729; --fg: #ece8f6; --muted: #a59cbc; --line: #2e2640;
+  --accent: #b39cf2; --accent-soft: #2a2140; --mist: #221b33;
+  --done: #5cc28f; --partial: #e0a84a; --open: #6d6385; --warn-bg: #2a2416;
+  color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 15px/1.55 var(--font); padding-inline: 16px; padding-block: 0 64px; }
+code { font: 600 0.86em var(--font); background: var(--accent-soft); color: var(--accent); padding: 1px 6px; border-radius: 6px; white-space: nowrap; }
+.ok { color: var(--done); font-weight: 600; }
+
+.top { margin-inline: -16px; padding: 40px 16px 32px; background: radial-gradient(80% 120% at 100% 0%, var(--mist) 0%, transparent 60%), var(--bg); border-bottom: 1px solid var(--line); }
+.top-in { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 24px 48px; align-items: end; }
+.kicker-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px; }
+.kicker-row--full { grid-column: 1 / -1; margin-bottom: 0; }
+.kicker { margin: 0; color: var(--muted); font-size: 14px; }
+.theme-toggle { display: inline-grid; place-items: center; width: 40px; height: 40px; padding: 0; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; }
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.theme-toggle .ico-sun { display: none; }
+.theme-toggle.is-dark .ico-sun { display: block; }
+.theme-toggle.is-dark .ico-moon { display: none; }
+.theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+h1 { font: 700 clamp(26px, 4vw, 40px)/1.08 var(--font); letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+.subtitle { margin: 10px 0 0; font-size: 17px; color: var(--muted); }
+.meta { margin-top: 12px; display: grid; gap: 2px; color: var(--muted); font-size: 14px; }
+.meta p { margin: 0; }
+.score { display: grid; gap: 12px; padding: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; }
+.score-pct { font: 700 48px/1 var(--font); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.score-pct small { font: 500 14px var(--font); letter-spacing: 0; color: var(--muted); margin-left: 8px; }
+.score-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: var(--line); gap: 2px; }
+.score-bar i.done { background: var(--done); } .score-bar i.partial { background: var(--partial); } .score-bar i.open { background: transparent; }
+.legend { display: grid; grid-template-columns: auto 1fr auto; gap: 4px 10px; font-size: 13px; align-items: center; font-variant-numeric: tabular-nums; }
+.legend b { font-weight: 600; text-align: right; }
+
+.journal { max-width: 1120px; margin: 32px auto 0; display: grid; gap: 16px; }
+.journal h2 { font-size: 20px; }
+.next { margin: 0; display: grid; gap: 4px; padding: 16px 20px; border-radius: 16px; background: var(--accent-soft); font-size: 16px; }
+.next span { font-size: 13px; font-weight: 600; color: var(--accent); }
+.log { list-style: none; margin: 0; padding: 0; display: grid; }
+.log-row { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 20px; padding: 14px 0; border-top: 1px solid var(--line); }
+.log-date { font-weight: 600; color: var(--accent); font-variant-numeric: tabular-nums; }
+.log-text { margin: 0; max-width: 92ch; overflow-wrap: anywhere; }
+.log-more summary { cursor: pointer; padding: 12px 0; border-top: 1px solid var(--line); color: var(--accent); font-weight: 600; list-style: none; }
+.log-more summary::-webkit-details-marker { display: none; }
+.log-more summary::before { content: "+ "; }
+.log-more[open] summary::before { content: "− "; }
+.principle { margin: 8px 0 0; max-width: 92ch; color: var(--muted); font-size: 14px; }
+
+.wrap { max-width: 1120px; margin: 48px auto 0; display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 40px; }
+.side { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); align-self: start; display: grid; gap: 20px; max-height: calc(100vh - 32px); overflow-y: auto; }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
+.dot.done { background: var(--done); } .dot.partial { background: var(--partial); }
+.dot.open { border: 2px solid var(--open); } .dot.na { background: var(--line); }
+.toc { display: grid; }
+.toc-row { display: flex; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 10px; color: var(--fg); text-decoration: none; font-size: 13px; }
+.toc-row:hover { background: var(--accent-soft); }
+.toc-name { flex: 1; min-width: 0; }
+.toc-num { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.filters button { font: 600 13px var(--font); padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; }
+.filters button[aria-pressed="true"] { background: var(--fg); border-color: var(--fg); color: var(--bg); }
+.filters button:focus-visible, .toc-row:focus-visible, .log-more summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+main { display: grid; gap: 48px; min-width: 0; }
+.sec { display: grid; gap: 12px; scroll-margin-top: 16px; }
+.sec-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+h2 { font: 700 20px/1.25 var(--font); letter-spacing: -0.01em; margin: 0; text-wrap: balance; }
+.sec-num { font-size: 13px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.bar { display: flex; height: 4px; border-radius: 2px; overflow: hidden; background: var(--line); gap: 2px; }
+.bar i.done { background: var(--done); } .bar i.partial { background: var(--partial); } .bar i.open { background: transparent; }
+.items { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.item { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 14px; padding: 14px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+.item.na { opacity: 0.6; }
+.mark { width: 20px; height: 20px; margin-top: 1px; border-radius: 50%; display: grid; place-items: center; font: 700 12px var(--font); }
+.item.done .mark { background: var(--done); color: var(--surface); } .item.done .mark::after { content: "✓"; }
+.item.partial .mark { background: var(--partial); color: var(--surface); } .item.partial .mark::after { content: "~"; }
+.item.open .mark { border: 2px solid var(--open); }
+.item.na .mark { background: var(--line); color: var(--muted); } .item.na .mark::after { content: "–"; }
+.item-body { display: grid; gap: 6px; min-width: 0; }
+.item-body p { margin: 0; overflow-wrap: anywhere; max-width: 92ch; }
+.lead { font-weight: 600; }
+.sub { color: var(--muted); font-size: 14px; }
+.warn { font-size: 14px; background: var(--warn-bg); padding: 8px 12px; border-radius: 10px; }
+.note { margin: 0; padding: 12px 16px; font: 14px/1.6 var(--font); color: var(--muted); white-space: pre-wrap; overflow-wrap: anywhere; background: var(--mist); border-radius: 12px; }
+.note code { font-size: 1em; }
+body[data-filter="open"] .item:not(.open):not(.partial), body[data-filter="open"] .note { display: none; }
+body[data-filter="done"] .item:not(.done), body[data-filter="done"] .note { display: none; }
+footer { max-width: 1120px; margin: 48px auto 0; color: var(--muted); font-size: 12px; }
+@media (max-width: 860px) {
+  .top-in, .wrap { grid-template-columns: minmax(0, 1fr); }
+  .side { position: static; max-height: none; overflow: visible; }
+  .log-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+}
+.nav-link { color: var(--accent); font-weight: 600; text-decoration: none; }
+.nav-link:hover { text-decoration: underline; }
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 20px; }
+.tab { display: inline-flex; align-items: center; padding: 10px 18px; border-radius: 999px; font: 600 14px var(--font); text-decoration: none; color: var(--fg); background: var(--surface); border: 1px solid var(--line); }
+.tab--back span { margin-right: 6px; font-size: 16px; line-height: 1; }
+.tab:hover { border-color: var(--accent); color: var(--accent); }
+.tab.is-active { background: var(--fg); border-color: var(--fg); color: var(--bg); }
+.tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.chip { font: 600 12px var(--font); padding: 2px 10px; border-radius: 999px; white-space: nowrap; background: var(--line); color: var(--muted); }
+.chip.open { background: var(--warn-bg); color: var(--partial); }
+.chip.done { background: var(--accent-soft); color: var(--done); }
+.chip.client { background: var(--accent-soft); color: var(--accent); }
+.find-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 16px; }
+.find-tags { display: flex; gap: 6px; align-items: baseline; }
+.find-area { font-size: 12px; color: var(--muted); }
+.finds .item { grid-template-columns: minmax(0, 1fr); }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="top-in">
+    <div>
+      <div class="kicker-row"><p class="kicker">GLOXORA, стенд Dmytro</p></div>
+      <nav class="tabs" aria-label="Страницы"><a class="tab tab--back" href="index.html"><span aria-hidden="true">←</span> Чеклист проверок</a><a class="tab" href="findings.html">Риски, ошибки и вопросы клиенту</a><a class="tab is-active" href="demo.html" aria-current="page">Демо для менеджера</a></nav>
+      <h1>Демо для менеджера</h1>
+      <div class="meta"><p>Шпаргалка к видео со стенда (около 36 минут). Видео передаётся отдельным файлом. Главы ниже — таймкоды итогового видео. Стенд — магазин Dmytro, тестовые товары и данные.</p></div>
+    </div>
+    
+  </div>
+</div>
+<div class="wrap">
+  <aside class="side"><nav class="toc" aria-label="Разделы"><a class="toc-row" href="#f0"><span class="dot done"></span><span class="toc-name">Видео по главам</span><span class="toc-num">23</span></a><a class="toc-row" href="#f1"><span class="dot done"></span><span class="toc-name">Сказать клиенту</span><span class="toc-num">3</span></a><a class="toc-row" href="#f2"><span class="dot done"></span><span class="toc-name">Вопросы клиенту</span><span class="toc-num">3</span></a></nav></aside>
+  <main><section class="sec" id="f0"><header class="sec-head"><h2>Видео по главам</h2><span class="sec-num">23</span></header><ul class="items finds"><li class="item"><div class="item-body"><div class="find-head"><p class="lead">00:00 Главная: переключатель оттенков, переход на товар</p><span class="find-tags"><span class="find-area">Витрина</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">00:59 Коллекция и карточка линзы, покупка закрыта без рецепта</p><span class="find-tags"><span class="find-area">Витрина</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">01:33 Запись на приём (Sesami): выбор времени, $25</p><span class="find-tags"><span class="find-area">Sesami</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">02:58 Оформление визита и письмо-подтверждение</p><span class="find-tags"><span class="find-area">Sesami</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">03:51 Депозит возвращается подарочной картой</p><span class="find-tags"><span class="find-area">Flow</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">04:18 Автоматизации Shopify Flow: удержание заказов, подарочная карта, истечение рецепта</p><span class="find-tags"><span class="find-area">Flow</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">06:08 Новый покупатель: вход и загрузка рецепта</p><span class="find-tags"><span class="find-area">Airtable</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">07:49 Письма сотруднику и покупателю, статус «на проверке»</p><span class="find-tags"><span class="find-area">Klaviyo</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">09:40 Одобрение в Airtable, Make ставит тег <code>rx-verified</code></p><span class="find-tags"><span class="find-area">Make</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">12:15 Покупка: цвет, упаковка 30/90, разово или подпиской</p><span class="find-tags"><span class="find-area">Витрина</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">12:46 Рецепт истёк, а линза в корзине: чекаут не пропускает</p><span class="find-tags"><span class="find-area">Checkout</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">16:12 Страница магазина с картой</p><span class="find-tags"><span class="find-area">Витрина</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">16:30 Отказ в рецепте: письмо, покупка закрыта</p><span class="find-tags"><span class="find-area">Klaviyo</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">17:55 Ограничение бесплатного Klaviyo: нужен платный тариф и домен</p><span class="find-tags"><span class="find-area">Klaviyo</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">19:53 Подписка: оформление и контракт</p><span class="find-tags"><span class="find-area">Subscriptions</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">22:21 Гостевая запись на визит и подарочная карта в админке</p><span class="find-tags"><span class="find-area">Sesami</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">24:05 Klaviyo: письма о статусе рецепта</p><span class="find-tags"><span class="find-area">Klaviyo</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">24:43 Фильтры, свотчи цветов, метаполя BC/DIA</p><span class="find-tags"><span class="find-area">Каталог</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">25:56 Страница услуги «Eye exam»</p><span class="find-tags"><span class="find-area">Sesami</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">26:27 Фильтры и корзина, оформление аккаунта и чекаута</p><span class="find-tags"><span class="find-area">Витрина</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">27:56 Locksmith: коллекция линз закрыта без рецепта</p><span class="find-tags"><span class="find-area">Locksmith</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">29:35 Итоги и что осталось</p><span class="find-tags"><span class="find-area">Итог</span></span></div></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">31:41 Касса: продажа, списание подарочной карты, чек</p><span class="find-tags"><span class="find-area">POS</span></span></div></div></li></ul></section><section class="sec" id="f1"><header class="sec-head"><h2>Сказать клиенту</h2><span class="sec-num">3</span></header><ul class="items finds"><li class="item"><div class="item-body"><div class="find-head"><p class="lead">На стенде упрощено</p><span class="find-tags"><span class="find-area">Стенд</span></span></div><p class="sub">Тестовые товары и картинки, адрес магазина в Торонто вместо Калифорнии, бесплатный Klaviyo, пробный период Sesami. Оформление сайта сделано по направлению Dreamy Creative из исследования дизайнера, это не финальный фирменный стиль.</p></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">Нужно от клиента для запуска</p><span class="find-tags"><span class="find-area">Блокеры</span></span></div><p class="sub">Письменное согласие Shopify Payments на рецептурные линзы, решение юриста (Airtable или сервис с BAA), лицензированный оптометрист, платный Klaviyo и собственный домен отправки писем, тариф Shopify не Basic (нужен HTTP-запрос во Flow).</p></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">Касса не проверяет рецепт</p><span class="find-tags"><span class="find-area">POS</span></span></div><p class="sub">Кассир не видит статус рецепта. Варианты: инструкция кассиру или доработка для кассы (отдельная работа).</p></div></li></ul></section><section class="sec" id="f2"><header class="sec-head"><h2>Вопросы клиенту</h2><span class="sec-num">3</span></header><ul class="items finds"><li class="item"><div class="item-body"><div class="find-head"><p class="lead">$25 за визит — цена или депозит?</p><span class="find-tags"><span class="find-area">Sesami</span></span></div><p class="sub">Сейчас настроено как депозит: после записи покупатель получает подарочную карту на $25 и тратит её на линзы.</p></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">Как проверять рецепт на кассе?</p><span class="find-tags"><span class="find-area">POS</span></span></div><p class="sub">Инструкция кассиру или расширение для кассы со статусом рецепта.</p></div></li><li class="item"><div class="item-body"><div class="find-head"><p class="lead">Какое приложение лояльности?</p><span class="find-tags"><span class="find-area">Лояльность</span></span></div><p class="sub">Нужно приложение, которое работает и онлайн, и на кассе (в ранней оценке — Smile).</p><p class="sub">Полный список рисков и ограничений — на вкладке «Риски, ошибки и вопросы клиенту».</p></div></li></ul></section></main>
+</div>
+<footer>Обновлено 23.10.2026 17:36. Комментарии: выделите текст → Annotate (Hypothesis, нужен аккаунт hypothes.is). Пишите в приватной группе проекта — публичные заметки видны всем.</footer>
+<script>
+try { var th = localStorage.getItem('rx-theme'); if (th) document.documentElement.dataset.theme = th; } catch (e) {}
+</script>
+<script>window.hypothesisConfig = function () { return { showHighlights: "always" }; };</script>
+<script src="https://hypothes.is/embed.js" async></script>
+</body>
+</html>
