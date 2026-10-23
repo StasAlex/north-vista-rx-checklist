@@ -4,105 +4,127 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>North Vista Rx PoC</title>
+<title>GLOXORA Rx PoC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Unbounded:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap">
 <style>
 body { margin: 0; }
-/* Layout: narrow reading column, sticky section index on wide screens; Rx-form feel — clinical, quiet, one teal accent */
 :root {
-  --bg: #f6f8f9; --surface: #ffffff; --fg: #17242b; --muted: #5d6d75; --line: #dce4e8;
-  --accent: #0e7c86; --accent-soft: #e2f2f3;
-  --done: #2f8a4f; --partial: #b7791f; --open: #8a99a1; --warn-bg: #fdf6e7;
-  --display: "Unbounded", "Golos Text", system-ui, sans-serif;
-  --body: "Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --bg: #fbf9fd; --surface: #ffffff; --fg: #2a1f45; --muted: #6a5f85; --line: #e6e0f3;
+  --accent: #6b4fbf; --accent-soft: #efeafb; --mist: #eee8fa;
+  --done: #2f8a5f; --partial: #b7791f; --open: #a59cbc; --warn-bg: #fdf3e2;
+  --font: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --bg: #0f1619; --surface: #162126; --fg: #e3ecef; --muted: #93a5ad; --line: #26353c;
-  --accent: #4fc1c9; --accent-soft: #173a3e; --done: #5cc27f; --partial: #e0a84a; --open: #6d7f87; --warn-bg: #2a2416;
+  --bg: #15111f; --surface: #1d1729; --fg: #ece8f6; --muted: #a59cbc; --line: #2e2640;
+  --accent: #b39cf2; --accent-soft: #2a2140; --mist: #221b33;
+  --done: #5cc28f; --partial: #e0a84a; --open: #6d6385; --warn-bg: #2a2416;
   color-scheme: dark; } }
 :root[data-theme="dark"] {
-  --bg: #0f1619; --surface: #162126; --fg: #e3ecef; --muted: #93a5ad; --line: #26353c;
-  --accent: #4fc1c9; --accent-soft: #173a3e; --done: #5cc27f; --partial: #e0a84a; --open: #6d7f87; --warn-bg: #2a2416;
+  --bg: #15111f; --surface: #1d1729; --fg: #ece8f6; --muted: #a59cbc; --line: #2e2640;
+  --accent: #b39cf2; --accent-soft: #2a2140; --mist: #221b33;
+  --done: #5cc28f; --partial: #e0a84a; --open: #6d6385; --warn-bg: #2a2416;
   color-scheme: dark; }
 * { box-sizing: border-box; }
-body { background: var(--bg); color: var(--fg); font: 15px/1.55 var(--body); padding-inline: 16px; padding-block: 32px 64px; }
-.wrap { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 40px; }
-code { font: 500 0.86em var(--mono); background: var(--accent-soft); color: var(--accent); padding: 1px 5px; border-radius: 4px; white-space: nowrap; }
+body { background: var(--bg); color: var(--fg); font: 15px/1.55 var(--font); padding-inline: 16px; padding-block: 0 64px; }
+code { font: 600 0.86em var(--font); background: var(--accent-soft); color: var(--accent); padding: 1px 6px; border-radius: 6px; white-space: nowrap; }
 .ok { color: var(--done); font-weight: 600; }
 
-.top { max-width: 1120px; margin: 0 auto 32px; display: grid; gap: 12px; }
-.eyebrow { font: 500 12px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
-h1 { font: 600 clamp(24px, 4vw, 34px)/1.15 var(--display); margin: 0; text-wrap: balance; }
-.subtitle { font-size: 17px; color: var(--muted); margin: 0; }
-.meta { display: grid; gap: 2px; color: var(--muted); font-size: 14px; max-width: 72ch; }
-.meta p, .principle { margin: 0; }
-.principle { max-width: 72ch; padding: 12px 16px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; }
-
-.side { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); align-self: start; display: grid; gap: 20px; max-height: calc(100vh - 32px); overflow-y: auto; }
-.score { display: grid; gap: 10px; }
-.score-pct { font: 600 40px/1 var(--display); font-variant-numeric: tabular-nums; }
-.score-pct small { font: 400 14px var(--body); color: var(--muted); margin-left: 6px; }
+.top { margin-inline: -16px; padding: 40px 16px 32px; background: radial-gradient(80% 120% at 100% 0%, var(--mist) 0%, transparent 60%), var(--bg); border-bottom: 1px solid var(--line); }
+.top-in { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 24px 48px; align-items: end; }
+.kicker-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px; }
+.kicker { margin: 0; color: var(--muted); font-size: 14px; }
+.theme-toggle { font: 600 13px var(--font); padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; }
+.theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+h1 { font: 700 clamp(26px, 4vw, 40px)/1.08 var(--font); letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+.subtitle { margin: 10px 0 0; font-size: 17px; color: var(--muted); }
+.meta { margin-top: 12px; display: grid; gap: 2px; color: var(--muted); font-size: 14px; }
+.meta p { margin: 0; }
+.score { display: grid; gap: 12px; padding: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; }
+.score-pct { font: 700 48px/1 var(--font); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.score-pct small { font: 500 14px var(--font); letter-spacing: 0; color: var(--muted); margin-left: 8px; }
+.score-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: var(--line); gap: 2px; }
+.score-bar i.done { background: var(--done); } .score-bar i.partial { background: var(--partial); } .score-bar i.open { background: transparent; }
 .legend { display: grid; grid-template-columns: auto 1fr auto; gap: 4px 10px; font-size: 13px; align-items: center; font-variant-numeric: tabular-nums; }
-.legend b { font-weight: 500; text-align: right; }
+.legend b { font-weight: 600; text-align: right; }
+
+.journal { max-width: 1120px; margin: 32px auto 0; display: grid; gap: 16px; }
+.journal h2 { font-size: 20px; }
+.next { margin: 0; display: grid; gap: 4px; padding: 16px 20px; border-radius: 16px; background: var(--accent-soft); font-size: 16px; }
+.next span { font-size: 13px; font-weight: 600; color: var(--accent); }
+.log { list-style: none; margin: 0; padding: 0; display: grid; }
+.log-row { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 20px; padding: 14px 0; border-top: 1px solid var(--line); }
+.log-date { font-weight: 600; color: var(--accent); font-variant-numeric: tabular-nums; }
+.log-text { margin: 0; max-width: 92ch; overflow-wrap: anywhere; }
+.log-more summary { cursor: pointer; padding: 12px 0; border-top: 1px solid var(--line); color: var(--accent); font-weight: 600; list-style: none; }
+.log-more summary::-webkit-details-marker { display: none; }
+.log-more summary::before { content: "+ "; }
+.log-more[open] summary::before { content: "− "; }
+.principle { margin: 8px 0 0; max-width: 92ch; color: var(--muted); font-size: 14px; }
+
+.wrap { max-width: 1120px; margin: 48px auto 0; display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 40px; }
+.side { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); align-self: start; display: grid; gap: 20px; max-height: calc(100vh - 32px); overflow-y: auto; }
 .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
 .dot.done { background: var(--done); } .dot.partial { background: var(--partial); }
 .dot.open { border: 2px solid var(--open); } .dot.na { background: var(--line); }
-.toc { display: grid; border-top: 1px solid var(--line); }
-.toc-row { display: flex; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line); color: var(--fg); text-decoration: none; font-size: 13px; }
-.toc-row:hover .toc-name, .toc-row:focus-visible .toc-name { color: var(--accent); }
+.toc { display: grid; }
+.toc-row { display: flex; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 10px; color: var(--fg); text-decoration: none; font-size: 13px; }
+.toc-row:hover { background: var(--accent-soft); }
 .toc-name { flex: 1; min-width: 0; }
-.toc-num { color: var(--muted); font: 12px var(--mono); }
-@media (max-width: 860px) { .wrap { grid-template-columns: minmax(0, 1fr); gap: 24px; } .side { position: static; max-height: none; overflow: visible; } }
+.toc-num { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
 .filters { display: flex; flex-wrap: wrap; gap: 6px; }
-.filters button { font: 500 13px var(--body); padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; }
-.filters button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); }
-.filters button:focus-visible, .toc-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.filters button { font: 600 13px var(--font); padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; }
+.filters button[aria-pressed="true"] { background: var(--fg); border-color: var(--fg); color: var(--bg); }
+.filters button:focus-visible, .toc-row:focus-visible, .log-more summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-main { display: grid; gap: 40px; min-width: 0; }
+main { display: grid; gap: 48px; min-width: 0; }
 .sec { display: grid; gap: 12px; scroll-margin-top: 16px; }
 .sec-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
-h2 { font: 600 18px/1.3 var(--display); margin: 0; text-wrap: balance; }
-.sec-num { font: 13px var(--mono); color: var(--muted); white-space: nowrap; }
+h2 { font: 700 20px/1.25 var(--font); letter-spacing: -0.01em; margin: 0; text-wrap: balance; }
+.sec-num { font-size: 13px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .bar { display: flex; height: 4px; border-radius: 2px; overflow: hidden; background: var(--line); gap: 2px; }
 .bar i.done { background: var(--done); } .bar i.partial { background: var(--partial); } .bar i.open { background: transparent; }
 .items { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-.item { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 12px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+.item { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 14px; padding: 14px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
 .item.na { opacity: 0.6; }
-.mark { width: 18px; height: 18px; margin-top: 2px; border-radius: 5px; display: grid; place-items: center; font: 600 12px var(--body); }
+.mark { width: 20px; height: 20px; margin-top: 1px; border-radius: 50%; display: grid; place-items: center; font: 700 12px var(--font); }
 .item.done .mark { background: var(--done); color: var(--surface); } .item.done .mark::after { content: "✓"; }
 .item.partial .mark { background: var(--partial); color: var(--surface); } .item.partial .mark::after { content: "~"; }
 .item.open .mark { border: 2px solid var(--open); }
 .item.na .mark { background: var(--line); color: var(--muted); } .item.na .mark::after { content: "–"; }
 .item-body { display: grid; gap: 6px; min-width: 0; }
-.item-body p { margin: 0; overflow-wrap: anywhere; }
-.lead { font-weight: 500; }
+.item-body p { margin: 0; overflow-wrap: anywhere; max-width: 92ch; }
+.lead { font-weight: 600; }
 .sub { color: var(--muted); font-size: 14px; }
-.warn { font-size: 14px; background: var(--warn-bg); padding: 6px 10px; border-radius: 6px; }
-.note { margin: 0; padding: 12px 16px; font: 13px/1.6 var(--mono); color: var(--muted); white-space: pre-wrap; overflow-wrap: anywhere; border: 1px dashed var(--line); border-radius: 8px; }
+.warn { font-size: 14px; background: var(--warn-bg); padding: 8px 12px; border-radius: 10px; }
+.note { margin: 0; padding: 12px 16px; font: 14px/1.6 var(--font); color: var(--muted); white-space: pre-wrap; overflow-wrap: anywhere; background: var(--mist); border-radius: 12px; }
 .note code { font-size: 1em; }
 body[data-filter="open"] .item:not(.open):not(.partial), body[data-filter="open"] .note { display: none; }
 body[data-filter="done"] .item:not(.done), body[data-filter="done"] .note { display: none; }
-footer { max-width: 1120px; margin: 48px auto 0; color: var(--muted); font: 12px var(--mono); }
+footer { max-width: 1120px; margin: 48px auto 0; color: var(--muted); font-size: 12px; }
+@media (max-width: 860px) {
+  .top-in, .wrap { grid-template-columns: minmax(0, 1fr); }
+  .side { position: static; max-height: none; overflow: visible; }
+  .log-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+}
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 </style>
 
 </head>
 <body>
 <div class="top">
-  <span class="eyebrow">North Vista Beauty · Rx PoC · магазин Dmytro</span>
-  <h1>Проверка схемы «рецепт → тег → доступ к линзам»</h1>
-  <p class="subtitle">проверка схемы «рецепт → тег → доступ к линзам»</p>
-  <div class="meta"><p>Стенд: магазин Dmytro, тема North Vista Horizon test theme</p><p>Обновлено по совместному ручному прогону 20.10.2026; сверка стека 21.10.2026.</p><p>20.10: POS заработал (роль Organization POS administrator, PIN задан в админке).</p><p>Проверены продажа, остатки, возврат, смена, email-чек, SKU/штрихкод,</p><p>самовывоз онлайн-заказа, путь A. Касса Rx не блокирует, теги rx-* кассир</p><p>не видит, Flow ставит <code>rx-hold</code> на POS-заказы — открытые доработки.</p><p>20.10 (позже): Shopify Subscriptions установлено, план «Subscribe and save»</p><p>(каждый месяц, −10%) на тестовой линзе; виджет в Product details над Buy</p><p>buttons; у <code>rx-verified</code> подписка попадает в корзину за $35.99 с планом.</p><p>Виджет скрывается при закрытой покупке (<code>rx-purchase</code>-gate) — выложено,</p><p>проверка гостем не проведена.</p><p>21.10: сверка со стеком из Technical Overview (документ для клиента) —</p><p>добавлен раздел 11 (Sesami, лояльность, магазин на сайте, отчёты) и связка</p><p>тег → Klaviyo. Customer Fields заменён формой Airtable + Make.</p><p>21.10: раздел 9 сверен с Technical Overview — 8 пунктов вне документа «не нужно»,</p><p>каталог и запрос врачу переписаны по документу.</p><p>22.10: Klaviyo установлен на Dmytro (отдельный тестовый аккаунт, Free).</p><p>Связка тег → письмо проверена через сегмент по Shopify Tags: тег <code>rx-verified</code></p><p>в 13:08 → письмо доставлено в 13:18 (~10 мин). Ограничения: неподписанный</p><p>покупатель Suppressed, письмо пропущено; transactional — только платный</p><p>аккаунт и flow по событию; без своего домена отправки письмо в спаме.</p><p>22.10 (позже): письма запускаются событием из Make — модуль Klaviyo Create</p><p>Event (OAuth) после HTTP 4 сценария Integration Airtable, метрика Rx Status</p><p>Changed (status + expires_at). Flow по метрике с фильтром status: письма</p><p><code>rx-pending</code>, <code>rx-verified</code> (с датой окончания), <code>rx-rejected</code> доставлены.</p><p>22.10 (вечер): <code>rx-expired</code> — Shopify Flow «Rx: expire prescriptions» шлёт</p><p>событие в Klaviyo (Send HTTP request, метрика с источником API), письмо</p><p>«Your prescription has expired» доставлено. Run code берёт только <code>rx-verified</code>.</p><p>22.10 (поздно): напоминания 30/7 — Make пишет rx_expires_at в профиль</p><p>Klaviyo (HTTP profile-import), flow по дате «Rx reminders 30/7» собран и</p><p>включён; реальная отправка не дождались (проверка раз в сутки) — частично.</p><p>Klaviyo по разделу 6 закрываем как рабочий; дальше — раздел 11 (Sesami).</p><p>22.10 (вечер): Sesami установлен (Premium trial 10 дней), услуга, сотрудник,</p><p>кнопка записи на товаре-услуге, оплата депозита $25 заказом, бронь в</p><p>календаре, письмо покупателю с файлом календаря — работают.</p><p>23.10: депозит Sesami → gift card (Flow) → списан на кассе; ложный <code>rx-hold</code></p><p>на POS-заказах исправлен; форма Airtable открыта без входа в Airtable;</p><p>каталог (цвет × упаковка, BC/DIA, свотчи), pickup на карточке, страница</p><p>магазина, чекаут подписки. Витрина переоформлена (Dreamy Creative из</p><p>исследования дизайнера): палитра, Figtree, логотип GLOXORA, радужка на</p><p>главной, шапки коллекции/страниц, FAQ, фото линз, брендинг чекаута,</p><p>фильтр и корзина — боковые панели. Следующий шаг: материалы для демо</p><p>менеджеру (видео + шпаргалка), затем лояльность и Rx на кассе.</p></div>
-  <p class="principle">Принцип: в Shopify хранится только статус (тег rx-* + дата окончания), всё медицинское (скан, диоптрии, журнал FTC) — во внешней базе (Airtable, или Jotform HIPAA, если юрист потребует BAA).</p>
-</div>
-
-<div class="wrap">
-  <aside class="side">
+  <div class="top-in">
+    <div>
+      <div class="kicker-row"><p class="kicker">GLOXORA, стенд Dmytro</p>
+        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Переключить тему">Тёмная тема</button></div>
+      <h1>Проверка схемы «рецепт → тег → доступ к линзам»</h1>
+      <p class="subtitle">проверка схемы «рецепт → тег → доступ к линзам»</p>
+      <div class="meta"><p>Стенд: магазин Dmytro, тема North Vista Horizon test theme</p><p>Обновлено по совместному ручному прогону 20.10.2026; сверка стека 21.10.2026.</p></div>
+    </div>
     <div class="score">
       <div class="score-pct">69%<small>готовности</small></div>
+      <div class="score-bar" aria-hidden="true"><i class="done" style="flex:59"></i><i class="partial" style="flex:14"></i><i class="open" style="flex:23"></i></div>
       <div class="legend">
         <span class="dot done"></span><span>Проверено</span><b>59</b>
         <span class="dot partial"></span><span>Частично</span><b>14</b>
@@ -110,6 +132,18 @@ footer { max-width: 1120px; margin: 48px auto 0; color: var(--muted); font: 12px
         <span class="dot na"></span><span>Не нужно</span><b>11</b>
       </div>
     </div>
+  </div>
+</div>
+
+<section class="journal" aria-label="Журнал проверок">
+  <h2>Журнал</h2>
+  <p class="next"><span>Следующий шаг</span>материалы для демо менеджеру (видео + шпаргалка), затем лояльность и Rx на кассе.</p>
+  <ol class="log"><li class="log-row"><span class="log-date">23.10</span><p class="log-text">депозит Sesami → gift card (Flow) → списан на кассе; ложный <code>rx-hold</code> на POS-заказах исправлен; форма Airtable открыта без входа в Airtable; каталог (цвет × упаковка, BC/DIA, свотчи), pickup на карточке, страница магазина, чекаут подписки. Витрина переоформлена (Dreamy Creative из исследования дизайнера): палитра, Figtree, логотип GLOXORA, радужка на главной, шапки коллекции/страниц, FAQ, фото линз, брендинг чекаута, фильтр и корзина — боковые панели.</p></li><li class="log-row"><span class="log-date">22.10 (вечер)</span><p class="log-text">Sesami установлен (Premium trial 10 дней), услуга, сотрудник, кнопка записи на товаре-услуге, оплата депозита $25 заказом, бронь в календаре, письмо покупателю с файлом календаря — работают.</p></li><li class="log-row"><span class="log-date">22.10 (поздно)</span><p class="log-text">напоминания 30/7 — Make пишет rx_expires_at в профиль Klaviyo (HTTP profile-import), flow по дате «Rx reminders 30/7» собран и включён; реальная отправка не дождались (проверка раз в сутки) — частично. Klaviyo по разделу 6 закрываем как рабочий; дальше — раздел 11 (Sesami).</p></li></ol><details class="log-more"><summary>Ещё 7 записей</summary><ol class="log"><li class="log-row"><span class="log-date">22.10 (вечер)</span><p class="log-text"><code>rx-expired</code> — Shopify Flow «Rx: expire prescriptions» шлёт событие в Klaviyo (Send HTTP request, метрика с источником API), письмо «Your prescription has expired» доставлено. Run code берёт только <code>rx-verified</code>.</p></li><li class="log-row"><span class="log-date">22.10 (позже)</span><p class="log-text">письма запускаются событием из Make — модуль Klaviyo Create Event (OAuth) после HTTP 4 сценария Integration Airtable, метрика Rx Status Changed (status + expires_at). Flow по метрике с фильтром status: письма <code>rx-pending</code>, <code>rx-verified</code> (с датой окончания), <code>rx-rejected</code> доставлены.</p></li><li class="log-row"><span class="log-date">22.10</span><p class="log-text">Klaviyo установлен на Dmytro (отдельный тестовый аккаунт, Free). Связка тег → письмо проверена через сегмент по Shopify Tags: тег <code>rx-verified</code> в 13:08 → письмо доставлено в 13:18 (~10 мин). Ограничения: неподписанный покупатель Suppressed, письмо пропущено; transactional — только платный аккаунт и flow по событию; без своего домена отправки письмо в спаме.</p></li><li class="log-row"><span class="log-date">21.10</span><p class="log-text">раздел 9 сверен с Technical Overview — 8 пунктов вне документа «не нужно», каталог и запрос врачу переписаны по документу.</p></li><li class="log-row"><span class="log-date">21.10</span><p class="log-text">сверка со стеком из Technical Overview (документ для клиента) — добавлен раздел 11 (Sesami, лояльность, магазин на сайте, отчёты) и связка тег → Klaviyo. Customer Fields заменён формой Airtable + Make.</p></li><li class="log-row"><span class="log-date">20.10 (позже)</span><p class="log-text">Shopify Subscriptions установлено, план «Subscribe and save» (каждый месяц, −10%) на тестовой линзе; виджет в Product details над Buy buttons; у <code>rx-verified</code> подписка попадает в корзину за $35.99 с планом. Виджет скрывается при закрытой покупке (<code>rx-purchase</code>-gate) — выложено, проверка гостем не проведена.</p></li><li class="log-row"><span class="log-date">20.10</span><p class="log-text">POS заработал (роль Organization POS administrator, PIN задан в админке). Проверены продажа, остатки, возврат, смена, email-чек, SKU/штрихкод, самовывоз онлайн-заказа, путь A. Касса Rx не блокирует, теги rx-* кассир не видит, Flow ставит <code>rx-hold</code> на POS-заказы — открытые доработки.</p></li></ol></details>
+  <p class="principle">Принцип: в Shopify хранится только статус (тег rx-* + дата окончания), всё медицинское (скан, диоптрии, журнал FTC) — во внешней базе (Airtable, или Jotform HIPAA, если юрист потребует BAA).</p>
+</section>
+
+<div class="wrap">
+  <aside class="side">
     <div class="filters" role="group" aria-label="Фильтр пунктов">
       <button type="button" id="f-all" data-f="all" aria-pressed="true">Все</button>
       <button type="button" id="f-open" data-f="open" aria-pressed="false">Осталось</button>
@@ -193,7 +227,7 @@ Shopify Flow, Airtable, Shopify POS. Форма Airtable + Make вместо Cus
 Fields согласованы с клиентом (со слов команды, 21.10).</pre><li class="item na" data-status="na"><span class="mark" title="Не нужно" aria-label="Не нужно"></span><div class="item-body"><p class="lead">Customer Fields (рецепт в профиле покупателя Shopify): НЕ НУЖНО — заменён формой Airtable + Make; медданные не попадают в Shopify (Shopify не подписывает BAA), в Shopify только тег и срок</p></div></li><pre class="note">Запись на приём — Sesami (этап 3):</pre><li class="item done" data-status="done"><span class="mark" title="Проверено" aria-label="Проверено"></span><div class="item-body"><p class="lead">Sesami установлен; тип визита «подбор линз / осмотр», буферы, календарь и сотрудник 22.10: Premium trial (10 дней). Услуга «Eye exam &amp; lens fitting», 30 мин, $25 — это обычный товар Shopify (не физический). Ресурс «Optometrist (test)», Team Member, Пн–Пт 9–17. Буферы не настраивались. Часовой пояс Sesami: Canada/Eastern (стенд в Торонто); для боя — America/Los_Angeles</p></div></li><li class="item done" data-status="done"><span class="mark" title="Проверено" aria-label="Проверено"></span><div class="item-body"><p class="lead">Виджет записи на карточке линзы и отдельная страница записи 22.10: блок приложения «Sesami booking button» в шаблоне товара — кнопка Select time видна только на товаре-услуге; Auto add to cart + Skip cart → сразу чекаут. На карточке линзы нужна ссылка «Book an eye exam» на страницу услуги — не сделано. Замечание: на странице услуги остаются Add to cart / Buy it now (покупка без слота) — скрыть.</p><p class="warn">Грабли: Skip cart отправляет на чекаут всю корзину (в заказ #1015 попала линза-подписка из корзины) 23.10: шаблон product.service — скрыты Quantity / Add to cart / Accelerated checkout внутри Buy buttons (сам блок нужен: без формы товара Sesami не добавляет слот в корзину — грабли); на карточке линзы кнопка «Book an eye exam» → страница услуги <span class="ok">✓</span></p></div></li><li class="item partial" data-status="partial"><span class="mark" title="Частично" aria-label="Частично"></span><div class="item-body"><p class="lead">Письма Sesami: подтверждение, напоминание, файл календаря 22.10: письмо покупателю «Thanks for booking…» с датой и файлом календаря пришло; уведомление мерчанту включено. Напоминание не проверено</p></div></li><li class="item done" data-status="done"><span class="mark" title="Проверено" aria-label="Проверено"></span><div class="item-body"><p class="lead">Депозит при записи и его зачёт на кассе (механизм проверить: по ранней оценке Flow → gift card) 22.10: депозит работает как оплата товара-услуги: заказ #1016 $25 USD, бронь Paid в Sesami. Зачёт на кассе не решён. В Sesami нет механизма: шаблоны Flows — только письмо-напоминание, письмо «спасибо» и события в Klaviyo (создана / перенесена / отменена / завершена / за 24 ч); Apps — Forms и Add To Calendar. Варианты: Shopify Flow на заказ с услугой → Send Admin API request giftCardCreate, или ручная скидка кассира 23.10: Flow «Sesami deposit → gift card» (Order created → в заказе Eye exam &amp; lens fitting → giftCardCreate на сумму, customerId) — запись #1017 → карта $25, письмо с кодом покупателю; на кассе (#1019) карта списана ($25 USD = $35.57 CAD), остаток наличными, баланс $0 <span class="ok">✓</span>. Первая попытка оплаты на кассе — Checkout failed, повтор прошёл. Вопрос клиенту: $25 — цена визита или депозит в счёт линз (сейчас депозит)</p></div></li><li class="item partial" data-status="partial"><span class="mark" title="Частично" aria-label="Частично"></span><div class="item-body"><p class="lead">Запись видна сотруднику магазина (календарь / POS) 22.10: брони видны в Sesami → Calendar (админка Shopify и admin.sesami.co), check-in / no-show / перенос / отмена. В POS — не проверено</p></div></li><pre class="note">Лояльность (этап 4; приложение в Technical Overview не названо,
 в ранней оценке — Smile):</pre><li class="item open" data-status="open"><span class="mark" title="Не проверено" aria-label="Не проверено"></span><div class="item-body"><p class="lead">Выбрать приложение лояльности, работающее и онлайн, и в POS</p></div></li><li class="item open" data-status="open"><span class="mark" title="Не проверено" aria-label="Не проверено"></span><div class="item-body"><p class="lead">Баллы за покупку на кассе видны и списываются онлайн (5.1)</p></div></li><li class="item open" data-status="open"><span class="mark" title="Не проверено" aria-label="Не проверено"></span><div class="item-body"><p class="lead">Списание баллов на кассе</p></div></li><pre class="note">Магазин на сайте (этап 2):</pre><li class="item done" data-status="done"><span class="mark" title="Проверено" aria-label="Проверено"></span><div class="item-body"><p class="lead">Страница магазина: карта, часы работы, вход в запись 23.10: /pages/visit-our-store (шаблон page.store) + пункт меню Our store; адрес из Store address, иначе из Shop location (290 Bremner Blvd, Toronto — тест)</p></div></li><li class="item partial" data-status="partial"><span class="mark" title="Частично" aria-label="Частично"></span><div class="item-body"><p class="lead">Разметка LocalBusiness проходит валидатор 23.10: JSON-LD Optician (адрес, телефон, часы) в шаблоне; валидатор Google не проверен — магазин закрыт паролем</p></div></li><li class="item open" data-status="open"><span class="mark" title="Не проверено" aria-label="Не проверено"></span><div class="item-body"><p class="lead">Google Business Profile (данные и доступ — от клиента)</p></div></li><pre class="note">Отчёты (этап 4):</pre><li class="item open" data-status="open"><span class="mark" title="Не проверено" aria-label="Не проверено"></span><div class="item-body"><p class="lead">Отчёты POS по локации и по продавцу</p></div></li></ul></section><section class="sec" id="s11"><header class="sec-head"><h2>Блокеры на стороне клиента (не тесты, но без них не запускаемся)</h2><span class="sec-num">0 из 4</span></header><div class="bar" aria-hidden="true"><i class="done" style="flex:0"></i><i class="partial" style="flex:0"></i><i class="open" style="flex:4"></i></div><ul class="items"><li class="item open" data-status="open"><span class="mark" title="Не проверено" aria-label="Не проверено"></span><div class="item-body"><p class="lead">Письменное согласие Shopify Payments на продажу линз</p></div></li><li class="item open" data-status="open"><span class="mark" title="Не проверено" aria-label="Не проверено"></span><div class="item-body"><p class="lead">Healthcare-юрист: Airtable (Вариант 1) или HIPAA/BAA (Вариант 3)</p></div></li><li class="item open" data-status="open"><span class="mark" title="Не проверено" aria-label="Не проверено"></span><div class="item-body"><p class="lead">Лицензированный оптометрист для пути A</p></div></li><li class="item open" data-status="open"><span class="mark" title="Не проверено" aria-label="Не проверено"></span><div class="item-body"><p class="lead">Собственный домен отправки Klaviyo (DNS на домене клиента): на стенде письмо «via shared.klaviyomail.com» попало в спам</p></div></li></ul></section></main>
 </div>
-<footer>Обновлено 23.10.2026 12:34</footer>
+<footer>Обновлено 23.10.2026 12:45</footer>
 
 <script>
 (function () {
@@ -205,6 +239,20 @@ Fields согласованы с клиентом (со слов команды,
   }
   btns.forEach(function (b) { b.addEventListener('click', function () { set(b.dataset.f); }); });
   try { var saved = localStorage.getItem('rx-filter'); if (saved) set(saved); } catch (e) {}
+
+  var root = document.documentElement, tbtn = document.getElementById('theme-toggle');
+  function isDark() {
+    var t = root.dataset.theme;
+    return t ? t === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  function label() { tbtn.textContent = isDark() ? 'Светлая тема' : 'Тёмная тема'; }
+  try { var th = localStorage.getItem('rx-theme'); if (th) root.dataset.theme = th; } catch (e) {}
+  label();
+  tbtn.addEventListener('click', function () {
+    root.dataset.theme = isDark() ? 'light' : 'dark';
+    try { localStorage.setItem('rx-theme', root.dataset.theme); } catch (e) {}
+    label();
+  });
 })();
 </script>
 
